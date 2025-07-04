@@ -18,13 +18,22 @@ public class TilePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        y = 0;
         for (int i = 0; i < ImageLoader.getTileMap().length; i++) {
             BufferedImage image = ImageLoader.getTileMap()[i];
+            System.out.println(image);
             g.drawImage(image, x, y, null);
-            if (i % 2 == 0 && i != 0) {
+            System.out.println(x + "," + y);
+            if (i % 2 == 1) {
                 x = 0;
                 y = y + image.getHeight() + 10;
-            } else x = x + image.getWidth() + 10;
+            } else x = image.getWidth() + 10;
         }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        // Calculate width and height based on your tile sizes and spacing
+        return new Dimension(400, 720); // example; customize as needed
     }
 }
