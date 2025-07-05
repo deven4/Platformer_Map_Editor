@@ -5,22 +5,20 @@ import java.util.Arrays;
 
 public class Application extends JFrame implements Runnable {
 
-    private final int TARGET_FPS = 100;
-    private final double TIME_PER_FRAME = 1000000000.0 / TARGET_FPS;
-
     private boolean running = false;
-    private AppPanel appPanel;
+    private final AppPanel appPanel;
 
     Application() {
         JFrame jFrame = new JFrame();
         appPanel = new AppPanel();
         start();
 
-        jFrame.add(appPanel);
+        jFrame.getContentPane().add(appPanel);
+        jFrame.pack(); // Adjusts frame to panel’s preferred size
         jFrame.setVisible(true);
         jFrame.setLocationRelativeTo(null);
-        jFrame.setSize(1024, 768);
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jFrame.setSize(1280, 820);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void start() {
@@ -36,12 +34,13 @@ public class Application extends JFrame implements Runnable {
 
         while (running) {
             long currentTime = System.nanoTime();
+            int TARGET_FPS = 100;
+            double TIME_PER_FRAME = 1000000000.0 / TARGET_FPS;
             delta += (currentTime - lastTime) / TIME_PER_FRAME;
             lastTime = currentTime;
 
             while (delta >= 1) {
                 appPanel.update();
-                appPanel.repaint(); // Will call paintComponent()
                 delta--;
             }
 

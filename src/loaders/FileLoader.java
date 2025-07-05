@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class FileLoader {
@@ -21,8 +22,7 @@ public class FileLoader {
         URL resource = getClass().getResource("/levels/" + fileName);
         try {
             assert resource != null;
-            System.out.println(resource);
-            File file = new File(resource.getPath());
+            File file = new File(resource.toURI());
             BufferedReader reader = new BufferedReader(new FileReader(file));
             StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
@@ -32,7 +32,7 @@ public class FileLoader {
             }
             Gson gson = new Gson();
             tileMap = gson.fromJson(builder.toString(), Tile[].class);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

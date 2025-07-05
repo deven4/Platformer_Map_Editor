@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class ImageLoader {
@@ -14,14 +15,14 @@ public class ImageLoader {
         URL resource = ImageLoader.class.getResource("/" + directory);
         try {
             assert resource != null;
-            File folder = new File(resource.getPath());
+            File folder = new File(resource.toURI());
             File[] files = folder.listFiles();
             assert files != null;
             tileMap = new BufferedImage[files.length];
             for (int i = 0; i < files.length; i++) {
                 tileMap[i] = ImageIO.read(files[i]);
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
 
