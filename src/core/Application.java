@@ -9,16 +9,33 @@ public class Application extends JFrame implements Runnable {
     private final AppPanel appPanel;
 
     Application() {
-        JFrame jFrame = new JFrame();
         appPanel = new AppPanel();
+        addMenuBar();
         start();
 
-        jFrame.getContentPane().add(appPanel);
-        jFrame.pack(); // Adjusts frame to panel’s preferred size
-        jFrame.setVisible(true);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setSize(1280, 820);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().add(appPanel);
+        pack(); // Adjusts frame to panel’s preferred size
+        setVisible(true);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setSize(1200, 850);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void addMenuBar() {
+        // Menu bar
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem clearItem = new JMenuItem("Clear");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        clearItem.addActionListener(_ -> DesignPanel.tileMapData.clear());
+        exitItem.addActionListener(_ -> System.exit(0));
+        fileMenu.add(clearItem);
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        setJMenuBar(menuBar);
     }
 
     private void start() {
