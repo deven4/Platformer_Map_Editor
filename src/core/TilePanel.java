@@ -24,8 +24,8 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
     private final JScrollPane scrollPane;
     private final DesignPanel designPanel;
 
-    private String currentAssetKey;
-    private int currentAssetSetIdx = 0;
+    private String currAssetKey;
+    private int currAssetKeyIdx = 0;
     private final List<String> assetKeys;
     private final HashMap<String, BufferedImage[]> assetSetGrp;
 
@@ -38,7 +38,7 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         scrollPane = new JScrollPane(buttonPanel);
         assetSetGrp = imageLoader.getAssetGrp();
         assetKeys = new ArrayList<>(assetSetGrp.keySet());
-        currentAssetKey = assetKeys.get(currentAssetSetIdx);
+        currAssetKey = assetKeys.get(currAssetKeyIdx);
 
         setBackground(new Color(0xadb5bd));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -47,13 +47,13 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
 
         addTopBar();
         addTitleLabel();
-        addButtonPanel(assetSetGrp.get(currentAssetKey));
+        addButtonPanel(assetSetGrp.get(currAssetKey));
 
         setPreferredSize(new Dimension(PANEL_WIDTH, getPreferredSize().height));
     }
 
     private void addTitleLabel() {
-        titleLabel = new JLabel(currentAssetKey);
+        titleLabel = new JLabel(currAssetKey);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
@@ -73,21 +73,22 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         leftBtn.setForeground(Color.WHITE);
         rightBtn.setBackground(Color.DARK_GRAY);
         rightBtn.setForeground(Color.WHITE);
-        leftBtn.addActionListener(_ -> updateButtonPanel(currentAssetSetIdx--));
-        rightBtn.addActionListener(_ -> updateButtonPanel(currentAssetSetIdx++));
+        leftBtn.addActionListener(_ -> updateButtonPanel(-1));
+        rightBtn.addActionListener(_ -> updateButtonPanel(1));
 
         topBarPanel.setPreferredSize(new Dimension(PANEL_WIDTH, topBarPanel.getPreferredSize().height));
         add(topBarPanel);
     }
 
     private void updateButtonPanel(int idx) {
-        currentAssetSetIdx = idx;
+        currAssetKeyIdx += idx;
         buttonPanel.removeAll();
-        currentAssetSetIdx++;
-        if (currentAssetSetIdx >= assetKeys.size()) currentAssetSetIdx = 0;
-        currentAssetKey = assetKeys.get(currentAssetSetIdx);
-        addButtonPanel(assetSetGrp.get(currentAssetKey));
-        titleLabel.setText(currentAssetKey);
+
+        if (currAssetKeyIdx >= assetKeys.size()) currAssetKeyIdx = 0;
+        else if (currAssetKeyIdx < 0) currAssetKeyIdx = assetKeys.size() - 1;
+        currAssetKey = assetKeys.get(currAssetKeyIdx);
+        addButtonPanel(assetSetGrp.get(currAssetKey));
+        titleLabel.setText(currAssetKey);
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }
@@ -150,6 +151,7 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         Point current = SwingUtilities.convertPoint(button, e.getPoint(), designPanel);
         BufferedImage bufferedImage = (BufferedImage) button.getClientProperty("Tile");
         selectedTile = new Tile((int) current.getX(), (int) current.getY(), bufferedImage);
+        designPanel.setCurrSelectedAsset(selectedTile);
         DesignPanel.tileMapData.add(selectedTile);
     }
 
