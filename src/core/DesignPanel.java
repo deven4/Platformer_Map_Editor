@@ -11,11 +11,16 @@ import java.util.ArrayList;
 
 public class DesignPanel extends JPanel implements MouseListener, MouseMotionListener {
 
+    private Point start, end;
+    private int deltaX, deltaY;
+
     private JPopupMenu popupMenu;
     private Tile currSelectedAsset;
     public static ArrayList<Tile> tileMapData = new ArrayList<>();
 
     public DesignPanel() {
+        start = new Point(0, 0);
+        end = new Point();
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         addPopupMenu();
@@ -29,10 +34,9 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         popupMenu.add(bringToFront);
         bringToFront.addActionListener(e -> {
             System.out.println(tileMapData.getFirst() == currSelectedAsset);
-            if (tileMapData.isEmpty() || tileMapData.getFirst() == currSelectedAsset) return;
-            System.out.println("helo");
+            if (tileMapData.isEmpty() || tileMapData.getLast() == currSelectedAsset) return;
             tileMapData.remove(currSelectedAsset);
-            tileMapData.addFirst(currSelectedAsset);
+            tileMapData.addLast(currSelectedAsset);
         });
     }
 
@@ -40,11 +44,25 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (Tile tile : tileMapData) {
+        int x = Math.min(start.x, end.x);
+        int y = Math.min(start.y, end.y);
+        int width = Math.abs(start.x - end.x);
+        int height = Math.abs(start.y - end.y);
+        g.drawRect(x, y, width, height);
 
+        /* Draw Map */
+        for (Tile tile : tileMapData) {
             g.drawImage(tile.getImage(), tile.x, tile.y, null);
             if (currSelectedAsset == tile) {
+                g.setColor(Color.BLACK);
                 g.drawRect(tile.x, tile.y, tile.getImage().getWidth(), tile.getImage().getHeight());
+                g.setColor(Color.RED);
+//                Point botRight = new Point(tile.x + tile.getImage().getWidth(), tile.y + tile.getImage().getHeight());
+//                g.drawOval(botRight.x, botRight.y, 5, 5);
+//                g.drawLine(0, botRight.y, botRight.x, botRight.y);
+//                g.drawLine(0, mouseY, mouseX, mouseY);
+//                g.drawString(String.valueOf(botRight.x), botRight.x / 2 - 10, botRight.y - 5);
+//                g.drawString(String.valueOf(mouseX), mouseX / 2 - 10, mouseY - 5);
             }
         }
     }
@@ -61,20 +79,24 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     @Override
     public void mousePressed(MouseEvent e) {
-
-
-        for (Tile tile : tileMapData) {
-//            System.out.println(tile.x + ", " + tile.y + "; " + tile.getImage().getWidth() + ", " + tile.getImage().getHeight());
+        for (int i = tileMapData.size() - 1; i >= 0; i--) {
+            Tile tile = tileMapData.get(i);
             if (isClickInsideBBox(e, tile)) {
+                deltaX = e.getX() - tile.x;
+                deltaY = e.getY() - tile.y;
                 currSelectedAsset = tile;
-                break;
+                return;
             }
         }
+        start = e.getPoint();
+        end = start;
+        currSelectedAsset = null;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         showPopup(e);
+        end = start;
     }
 
     @Override
@@ -90,10 +112,9 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     @Override
     public void mouseDragged(MouseEvent e) {
         if (currSelectedAsset != null) {
-//            System.out.println(e.getX() + "," + e.getY());
-            currSelectedAsset.x = e.getX();
-            currSelectedAsset.y = e.getY();
-        }
+            currSelectedAsset.x = e.getX() - deltaX;
+            currSelectedAsset.y = e.getY() - deltaY;
+        } else end = e.getPoint();
     }
 
     @Override
@@ -114,15 +135,12 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     private boolean isClickInsideBBox(MouseEvent e, Tile tile) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        return mouseX >= tile.x && mouseX <= tile.x + tile.getImage().getWidth()
-                && mouseY >= tile.y && mouseY <= tile.y + tile.getImage().getHeight();
+        return mouseX >= tile.x && mouseX <= tile.x + tile.getImage().getWidth() && mouseY >= tile.y && mouseY <= tile.y + tile.getImage().getHeight();
     }
 
     private boolean isClickInsideBBox(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        return mouseX >= currSelectedAsset.x && mouseX <= currSelectedAsset.x + currSelectedAsset.getImage().getWidth()
-                && mouseY >= currSelectedAsset.y
-                && mouseY <= currSelectedAsset.y + currSelectedAsset.getImage().getHeight();
+        return mouseX >= currSelectedAsset.x && mouseX <= currSelectedAsset.x + currSelectedAsset.getImage().getWidth() && mouseY >= currSelectedAsset.y && mouseY <= currSelectedAsset.y + currSelectedAsset.getImage().getHeight();
     }
 }
