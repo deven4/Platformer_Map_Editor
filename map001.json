@@ -1,0 +1,77 @@
+[
+  {
+    "x": 743,
+    "y": 387,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Flagpole.png"
+  },
+  {
+    "x": 504,
+    "y": 512,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Stall 01.png"
+  },
+  {
+    "x": 223,
+    "y": 575,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Grass_01-23.png"
+  },
+  {
+    "x": 102,
+    "y": 385,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Wall.png"
+  },
+  {
+    "x": 627,
+    "y": 513,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Pint.png"
+  },
+  {
+    "x": 514,
+    "y": 577,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Grass_01-23.png"
+  },
+  {
+    "x": 368,
+    "y": 512,
+    "imagePath": "/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Wooden Barrel.png"
+  },
+  {
+    "x": 110,
+    "y": 639,
+    "imagePath": "/tiles/4.png"
+  },
+  {
+    "x": 238,
+    "y": 639,
+    "imagePath": "/tiles/2.png"
+  },
+  {
+    "x": 365,
+    "y": 639,
+    "imagePath": "/tiles/2.png"
+  },
+  {
+    "x": 491,
+    "y": 639,
+    "imagePath": "/tiles/2.png"
+  },
+  {
+    "x": 874,
+    "y": 639,
+    "imagePath": "/tiles/8.png"
+  },
+  {
+    "x": 139,
+    "y": 331,
+    "imagePath": "/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Window 02.png"
+  },
+  {
+    "x": 619,
+    "y": 639,
+    "imagePath": "/tiles/10.png"
+  },
+  {
+    "x": 747,
+    "y": 639,
+    "imagePath": "/tiles/12.png"
+  }
+]

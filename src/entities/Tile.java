@@ -4,19 +4,22 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
 
-    public int x, y, idx;
+    public int x, y;
+    public String imagePath;
+    public transient int deltaX, deltaY;
     private transient BufferedImage image;
 
-    public Tile(int x, int y, int idx) {
+    public Tile(int x, int y, String imagePath) {
         this.x = x;
         this.y = y;
-        this.idx = idx;
+        this.imagePath = imagePath;
     }
 
-    public Tile(int x, int y, BufferedImage image) {
+    public Tile(int x, int y, String imagePath, BufferedImage image) {
         this.x = x;
         this.y = y;
         this.image = image;
+        this.imagePath = imagePath;
     }
 
     public int getX() {
@@ -35,12 +38,12 @@ public class Tile {
         this.y = y;
     }
 
-    public int getIdx() {
-        return idx;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setIdx(int idx) {
-        this.idx = idx;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public BufferedImage getImage() {

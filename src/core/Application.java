@@ -26,14 +26,22 @@ public class Application extends JFrame implements Runnable {
         // Menu bar
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
+        JMenu editMenu = new JMenu("Edit");
         JMenuItem clearItem = new JMenuItem("Clear");
+        JMenuItem saveMap = new JMenuItem("Save map");
+        JMenuItem importMap = new JMenuItem("Import map");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-        clearItem.addActionListener(_ -> DesignPanel.tileMapData.clear());
         exitItem.addActionListener(_ -> System.exit(0));
-        fileMenu.add(clearItem);
+        saveMap.addActionListener(_ -> appPanel.saveMap());
+        importMap.addActionListener(_ -> appPanel.importMap());
+        clearItem.addActionListener(_ -> DesignPanel.tileMapData.clear());
+        fileMenu.add(importMap);
+        fileMenu.add(saveMap);
         fileMenu.add(exitItem);
+        editMenu.add(clearItem);
         menuBar.add(fileMenu);
+        menuBar.add(editMenu);
 
         setJMenuBar(menuBar);
     }

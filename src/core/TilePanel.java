@@ -26,28 +26,28 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
 
     private String currAssetKey;
     private int currAssetKeyIdx = 0;
-    private final List<String> assetKeys;
-    private final HashMap<String, BufferedImage[]> assetSetGrp;
+    private final List<String> assetGrpNameSet;
+    private HashMap<String, BufferedImage> selectedAssetGrp;
+    private final HashMap<String, HashMap<String, BufferedImage>> assetGroup;
 
     public TilePanel(DesignPanel designPanel) {
         this.designPanel = designPanel;
 
         topBarPanel = new JPanel();
         buttonPanel = new JPanel();
-        ImageLoader imageLoader = new ImageLoader();
         scrollPane = new JScrollPane(buttonPanel);
-        assetSetGrp = imageLoader.getAssetGrp();
-        assetKeys = new ArrayList<>(assetSetGrp.keySet());
-        currAssetKey = assetKeys.get(currAssetKeyIdx);
+        assetGroup = new ImageLoader().getAssetGrp();
+        assetGrpNameSet = new ArrayList<>(assetGroup.keySet());
+        currAssetKey = assetGrpNameSet.get(currAssetKeyIdx);
+        selectedAssetGrp = assetGroup.get(currAssetKey);
 
         setBackground(new Color(0xadb5bd));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentY(TOP_ALIGNMENT);
-        //setOpaque(false); // transparent panel
 
         addTopBar();
         addTitleLabel();
-        addButtonPanel(assetSetGrp.get(currAssetKey));
+        addButtonPanel();
 
         setPreferredSize(new Dimension(PANEL_WIDTH, getPreferredSize().height));
     }
@@ -84,21 +84,22 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         currAssetKeyIdx += idx;
         buttonPanel.removeAll();
 
-        if (currAssetKeyIdx >= assetKeys.size()) currAssetKeyIdx = 0;
-        else if (currAssetKeyIdx < 0) currAssetKeyIdx = assetKeys.size() - 1;
-        currAssetKey = assetKeys.get(currAssetKeyIdx);
-        addButtonPanel(assetSetGrp.get(currAssetKey));
+        if (currAssetKeyIdx >= assetGrpNameSet.size()) currAssetKeyIdx = 0;
+        else if (currAssetKeyIdx < 0) currAssetKeyIdx = assetGrpNameSet.size() - 1;
+        currAssetKey = assetGrpNameSet.get(currAssetKeyIdx);
+        selectedAssetGrp = assetGroup.get(currAssetKey);
+        addButtonPanel();
         titleLabel.setText(currAssetKey);
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }
 
-    private void addButtonPanel(BufferedImage[] images) {
+    private void addButtonPanel() {
         buttonPanel.setLayout(new GridLayout(0, 2, 2, 2)); // auto rows, 2 columns, 5px spacing
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        for (BufferedImage image : images) {
-            buttonPanel.add(createImageButton(image));
+        for (String imagePath : selectedAssetGrp.keySet()) {
+            buttonPanel.add(createImageButton(imagePath));
         }
         buttonPanel.setOpaque(false);
         scrollPane.setOpaque(false);
@@ -106,24 +107,18 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         scrollPane.setPreferredSize(new Dimension(PANEL_WIDTH, 700)); // adjust height
 
         add(scrollPane);
-        // setPreferredSize(new Dimension(getPreferredSize().width, 500));
     }
 
-    public JButton createImageButton(BufferedImage image) {
-        ImageIcon icon = new ImageIcon(image);
+    public JButton createImageButton(String imagePath) {
+        ImageIcon icon = new ImageIcon(selectedAssetGrp.get(imagePath));
         Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         JButton button = new JButton(new ImageIcon(scaled));
-        //button.setBorderPainted(false);
-        //button.setContentAreaFilled(false);
-        //button.setFocusPainted(false);
-        //button.setOpaque(false);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.putClientProperty("Tile", image);
+        button.putClientProperty("Tile", imagePath);
         button.addMouseListener(this);
         button.addMouseMotionListener(this);
         button.setPreferredSize(new Dimension(32, 32));
         button.setBackground(new Color(0xadb5bd));
-        //button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         return button;
     }
 
@@ -149,24 +144,21 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
     public void mousePressed(MouseEvent e) {
         JButton button = (JButton) e.getSource();
         Point current = SwingUtilities.convertPoint(button, e.getPoint(), designPanel);
-        BufferedImage bufferedImage = (BufferedImage) button.getClientProperty("Tile");
-        selectedTile = new Tile((int) current.getX(), (int) current.getY(), bufferedImage);
+        String imagePath = (String) button.getClientProperty("Tile");
+        selectedTile = new Tile((int) current.getX(), (int) current.getY(), imagePath, selectedAssetGrp.get(imagePath));
         designPanel.setCurrSelectedAsset(selectedTile);
         DesignPanel.tileMapData.add(selectedTile);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
     }
 }

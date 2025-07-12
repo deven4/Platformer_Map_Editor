@@ -1,28 +1,24 @@
 package loaders;
 
 import com.google.gson.Gson;
+import core.DesignPanel;
 import entities.Tile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 public class FileLoader {
 
-    private Tile[] tileMap;
+    private final Gson gson;
 
     public FileLoader() {
-        readMaps("map1.json");
+        gson = new Gson();
     }
 
-    private void readMaps(String fileName) {
-        URL resource = getClass().getResource("/levels/" + fileName);
-        try {
-            assert resource != null;
-            File file = new File(resource.toURI());
+    public Tile[] readMap(String fileName) throws IOException, URISyntaxException {
+        File file = new File(fileName);
             BufferedReader reader = new BufferedReader(new FileReader(file));
             StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
@@ -30,18 +26,23 @@ public class FileLoader {
                 builder.append(line);
                 line = reader.readLine();
             }
-            Gson gson = new Gson();
-            tileMap = gson.fromJson(builder.toString(), Tile[].class);
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+
+        Tile[] tiles = gson.fromJson(builder.toString(), Tile[].class);
+        for (Tile tile : tiles) {
+            URL resource = ImageLoader.class.getResource(tile.getImagePath());
+            assert resource != null;
+            File imageFile = new File(resource.toURI());
+            System.out.println(imageFile.getPath());
+            tile.setImage(ImageIO.read(imageFile));
         }
+        return tiles;
     }
 
-    public Tile[] getTileMap() {
-        return tileMap;
-    }
-
-    public static void main(String[] args) {
-        new FileLoader();
+    public void saveMap() throws IOException {
+        String json = gson.toJson(DesignPanel.tileMapData);
+        FileWriter fileWriter = new FileWriter("map001.json");
+        BufferedWriter writer = new BufferedWriter(fileWriter);
+        writer.write(json);
+        writer.close();
     }
 }
