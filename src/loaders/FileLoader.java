@@ -32,7 +32,6 @@ public class FileLoader {
             URL resource = ImageLoader.class.getResource(tile.getImagePath());
             assert resource != null;
             File imageFile = new File(resource.toURI());
-            System.out.println(imageFile.getPath());
             tile.setImage(ImageIO.read(imageFile));
         }
         return tiles;

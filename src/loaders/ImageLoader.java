@@ -9,19 +9,36 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
+/**
+ * Singleton class
+ * **/
 public class ImageLoader {
 
+    private static ImageLoader instance;
+
+    private final HashMap<String, BufferedImage> backgroundList;
     private final HashMap<String, HashMap<String, BufferedImage>> assetGrp;
 
-    public ImageLoader() {
+    private ImageLoader() {
         assetGrp = new HashMap<>();
+        backgroundList = loadImages("background");
 
         assetGrp.put("Tiles", loadImages("tiles"));
         assetGrp.put("Environment", loadImages("environment"));
         assetGrp.put("Building", loadImages("building"));
+    }
+
+    // Singleton accessor
+    public static ImageLoader getInstance() {
+        if (instance == null) {
+            instance = new ImageLoader();
+        }
+        return instance;
     }
 
     private HashMap<String, BufferedImage> loadImages(String directory) {
@@ -56,5 +73,9 @@ public class ImageLoader {
 
     public HashMap<String, HashMap<String, BufferedImage>> getAssetGrp() {
         return assetGrp;
+    }
+
+    public HashMap<String, BufferedImage> getBackgroundList() {
+        return backgroundList;
     }
 }

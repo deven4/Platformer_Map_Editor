@@ -36,7 +36,7 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         topBarPanel = new JPanel();
         buttonPanel = new JPanel();
         scrollPane = new JScrollPane(buttonPanel);
-        assetGroup = new ImageLoader().getAssetGrp();
+        assetGroup = ImageLoader.getInstance().getAssetGrp();
         assetGrpNameSet = new ArrayList<>(assetGroup.keySet());
         currAssetKey = assetGrpNameSet.get(currAssetKeyIdx);
         selectedAssetGrp = assetGroup.get(currAssetKey);
@@ -76,7 +76,6 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         leftBtn.addActionListener(_ -> updateButtonPanel(-1));
         rightBtn.addActionListener(_ -> updateButtonPanel(1));
 
-        topBarPanel.setPreferredSize(new Dimension(PANEL_WIDTH, topBarPanel.getPreferredSize().height));
         add(topBarPanel);
     }
 
@@ -104,7 +103,8 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         buttonPanel.setOpaque(false);
         scrollPane.setOpaque(false);
         scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(PANEL_WIDTH, 700)); // adjust height
+        System.out.println(topBarPanel.getPreferredSize().height);
+        scrollPane.setPreferredSize(new Dimension(PANEL_WIDTH, App.HEIGHT - 150)); // adjust height
 
         add(scrollPane);
     }

@@ -3,47 +3,25 @@ package core;
 import javax.swing.*;
 import java.util.Arrays;
 
-public class Application extends JFrame implements Runnable {
+public class App extends JFrame implements Runnable {
+
+    public static final int HEIGHT = 820;
 
     private boolean running = false;
     private final AppPanel appPanel;
 
-    Application() {
-        appPanel = new AppPanel();
-        addMenuBar();
+    App() {
+        appPanel = new AppPanel(this);
+        setJMenuBar(appPanel.getMenuBar());
+
         start();
-
         getContentPane().add(appPanel);
-        pack(); // Adjusts frame to panel’s preferred size
+        pack();
         setVisible(true);
-        setResizable(false);
+        //setResizable(false);
         setLocationRelativeTo(null);
-        setSize(1200, 850);
+        setSize(1200, App.HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    private void addMenuBar() {
-        // Menu bar
-        JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenu editMenu = new JMenu("Edit");
-        JMenuItem clearItem = new JMenuItem("Clear");
-        JMenuItem saveMap = new JMenuItem("Save map");
-        JMenuItem importMap = new JMenuItem("Import map");
-        JMenuItem exitItem = new JMenuItem("Exit");
-
-        exitItem.addActionListener(_ -> System.exit(0));
-        saveMap.addActionListener(_ -> appPanel.saveMap());
-        importMap.addActionListener(_ -> appPanel.importMap());
-        clearItem.addActionListener(_ -> DesignPanel.tileMapData.clear());
-        fileMenu.add(importMap);
-        fileMenu.add(saveMap);
-        fileMenu.add(exitItem);
-        editMenu.add(clearItem);
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-
-        setJMenuBar(menuBar);
     }
 
     private void start() {
@@ -79,6 +57,6 @@ public class Application extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        new Application();
+        new App();
     }
 }

@@ -3,11 +3,13 @@ package core;
 import entities.Tile;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +21,35 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     private Point start, end;
     private final Rectangle selectionBox;
 
+    private final App app;
     private JPopupMenu popupMenu;
     private final List<Tile> currSelectedAsset;
+    public static ArrayList<BufferedImage> bgImageData = new ArrayList<>();
     public static ArrayList<Tile> tileMapData = new ArrayList<>();
 
-    public DesignPanel() {
+    public DesignPanel(App app) {
+        this.app = app;
         end = new Point();
         start = new Point(0, 0);
         selectionBox = new Rectangle();
         currSelectedAsset = new ArrayList<>();
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        Border line = BorderFactory.createLineBorder(Color.BLACK,2, true); // Colored outer border
+        Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        setBorder(BorderFactory.createCompoundBorder(line, margin));
+        setPreferredSize(new Dimension(1024, 200));
 
         addPopupMenu();
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        DrawBgImg(g);
+        drawTileMap(g); /* Draw Map */
+        drawSelectionBox(g);
     }
 
     private void addPopupMenu() {
@@ -64,12 +81,10 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        drawTileMap(g); /* Draw Map */
-        drawSelectionBox(g);
+    private void DrawBgImg(Graphics g) {
+        for (BufferedImage image : bgImageData) {
+            g.drawImage(image, 0, 0, null);
+        }
     }
 
     private void drawTileMap(Graphics g) {
@@ -94,11 +109,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.f, new float[]{5.f}, 0.0f));
         selectionBox.setBounds(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y));
         g.drawRect(selectionBox.x, selectionBox.y, selectionBox.width, selectionBox.height);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(1024, 768);
     }
 
     @Override
