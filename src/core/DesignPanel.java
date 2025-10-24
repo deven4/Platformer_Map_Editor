@@ -5,10 +5,8 @@ import entities.Tile;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,22 +16,27 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     private static final int BRING_TO_FRONT = 0;
     private static final int SEND_TO_BACK = 1;
 
+    private enum MouseAction {
+        NONE, DRAG, RESIZE, CLICKED
+    }
+
     private Point start, end;
     private final Rectangle selectionBox;
 
-    private final App app;
     private JPopupMenu popupMenu;
     private final List<Tile> currSelectedAsset;
     public static ArrayList<BufferedImage> bgImageData = new ArrayList<>();
     public static ArrayList<Tile> tileMapData = new ArrayList<>();
+    boolean resizing;
+    Tile firstAsset;
+    private Point lastMouse;
 
     public DesignPanel(App app) {
-        this.app = app;
         end = new Point();
         start = new Point(0, 0);
         selectionBox = new Rectangle();
         currSelectedAsset = new ArrayList<>();
-        Border line = BorderFactory.createLineBorder(Color.BLACK,2, true); // Colored outer border
+        Border line = BorderFactory.createLineBorder(Color.BLACK, 2, true); // Colored outer border
         Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         setBorder(BorderFactory.createCompoundBorder(line, margin));
         setPreferredSize(new Dimension(1024, 200));
@@ -50,19 +53,29 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         DrawBgImg(g);
         drawTileMap(g); /* Draw Map */
         drawSelectionBox(g);
+
+        if (!currSelectedAsset.isEmpty()) {
+            g.setColor(Color.BLUE);
+            g.fillOval(currSelectedAsset.getFirst().getX() - 10, currSelectedAsset.getFirst().getY() - 10, 20, 20);
+        }
     }
 
     private void addPopupMenu() {
         popupMenu = new JPopupMenu();
         JMenuItem bringToFront = new JMenuItem("Bring to front");
         JMenuItem sendToBack = new JMenuItem("Send to back");
+        JMenuItem setType = new JMenuItem("Set type to platform");
         JMenuItem deleteTile = new JMenuItem("Delete");
         popupMenu.add(bringToFront);
         popupMenu.add(sendToBack);
+        popupMenu.add(setType);
         popupMenu.add(deleteTile);
-        bringToFront.addActionListener(e -> changeOrder(BRING_TO_FRONT));
+        bringToFront.addActionListener(_ -> changeOrder(BRING_TO_FRONT));
         deleteTile.addActionListener(this::deleteTile);
-        sendToBack.addActionListener(e -> changeOrder(SEND_TO_BACK));
+        sendToBack.addActionListener(_ -> changeOrder(SEND_TO_BACK));
+        setType.addActionListener(_ -> {
+            for (Tile tile : currSelectedAsset) tile.setType("platform");
+        });
     }
 
     private void deleteTile(ActionEvent actionEvent) {
@@ -89,7 +102,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     private void drawTileMap(Graphics g) {
         for (Tile tile : tileMapData) {
-            g.drawImage(tile.getImage(), tile.x, tile.y, null);
+            g.drawImage(tile.getImage(), tile.x, tile.y,tile.getWidth(),tile.getHeight(), null);
             if (!currSelectedAsset.isEmpty() && currSelectedAsset.contains(tile)) {
                 g.setColor(Color.BLACK);
                 g.drawRect(tile.x, tile.y, tile.getImage().getWidth(), tile.getImage().getHeight());
@@ -106,8 +119,10 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     private void drawSelectionBox(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.f, new float[]{5.f}, 0.0f));
-        selectionBox.setBounds(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y));
+        g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.f,
+                new float[]{5.f}, 0.0f));
+        selectionBox.setBounds(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x),
+                Math.abs(start.y - end.y));
         g.drawRect(selectionBox.x, selectionBox.y, selectionBox.width, selectionBox.height);
     }
 
@@ -118,6 +133,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     @Override
     public void mousePressed(MouseEvent e) {
+
         // Case 1: Click is over the current selection
         if (isClickOverSelection(e)) {
             for (Tile tile : currSelectedAsset) {
@@ -158,7 +174,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
@@ -174,11 +189,34 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
                 tile.y = e.getY() - tile.deltaY;
             }
         } else end = e.getPoint();
+        if (resizing) {
+
+          //  firstAsset.setWidth(width_new_box);
+          //  firstAsset.setHeight(height_new_box);
+            firstAsset.setX(e.getX());
+            firstAsset.setY(e.getY());
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (!currSelectedAsset.isEmpty()) {
+            firstAsset = currSelectedAsset.getFirst();
+            //System.out.println(firstAsset.x + ", " + firstAsset.y);
+            Ellipse2D ellipse2D = new Ellipse2D.Float(currSelectedAsset.getFirst().getX() - 10,
+                    currSelectedAsset.getFirst().getY() - 10, 20, 20);
 
+            if (ellipse2D.contains(e.getX(), e.getY())) {
+                setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
+                resizing = true;
+            } else setCursorToDefault();
+
+        } else setCursorToDefault();
+    }
+
+    private void setCursorToDefault() {
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        resizing = false;
     }
 
     public void setCurrSelectedAsset(Tile tile) {

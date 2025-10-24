@@ -1,1 +1,26 @@
-[{"x":142,"y":248,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Tree 02.png"},{"x":1120,"y":597,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Stall 01.png"},{"x":707,"y":470,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Flagpole.png"},{"x":1069,"y":245,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Tree 01.png"},{"x":958,"y":405,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Pillar 02.png"},{"x":857,"y":599,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Fence 02.png"},{"x":729,"y":599,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Fence 02.png"},{"x":635,"y":249,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Roof A 05.png"},{"x":987,"y":249,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Roof A 04.png"},{"x":491,"y":666,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Grass_01-23.png"},{"x":476,"y":572,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Decor Roof 01.png"},{"x":113,"y":599,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Wooden Barrel.png"},{"x":8,"y":598,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Wooden Barrel.png"},{"x":1,"y":725,"imagePath":"/tiles/11.png"},{"x":128,"y":725,"imagePath":"/tiles/11.png"},{"x":256,"y":725,"imagePath":"/tiles/11.png"},{"x":384,"y":725,"imagePath":"/tiles/11.png"},{"x":512,"y":725,"imagePath":"/tiles/12.png"},{"x":640,"y":725,"imagePath":"/tiles/2.png"},{"x":768,"y":725,"imagePath":"/tiles/2.png"},{"x":1279,"y":725,"imagePath":"/tiles/2.png"},{"x":1241,"y":408,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Pillar 02.png"},{"x":670,"y":406,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Pillar 02.png"},{"x":685,"y":392,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Pillar 01.png"},{"x":974,"y":393,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Pillar 01.png"},{"x":923,"y":282,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Decor Window 02.png"},{"x":655,"y":664,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Grass_01-23.png"},{"x":920,"y":477,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Cannon.png"},{"x":1024,"y":725,"imagePath":"/tiles/2.png"},{"x":896,"y":725,"imagePath":"/tiles/2.png"},{"x":1152,"y":725,"imagePath":"/tiles/2.png"},{"x":1047,"y":365,"imagePath":"/building/Cartoon_Medieval_Guard_Post_2D_Level_Set_Building - Decor 04.png"},{"x":209,"y":765,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Rock 05.png"},{"x":911,"y":790,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Rock 01.png"},{"x":927,"y":384,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Shield 03.png"},{"x":27,"y":486,"imagePath":"/environment/Cartoon_Medieval_Guard_Post_2D_Level_Set_Environment - Sign 02.png"}]
+[
+  {
+    "x": 628,
+    "y": -1,
+    "type": "l",
+    "imagePath": "/rocks/6.png"
+  },
+  {
+    "x": 559,
+    "y": 556,
+    "type": "platform",
+    "imagePath": "/floor/22.png"
+  },
+  {
+    "x": -195,
+    "y": 571,
+    "type": "platform",
+    "imagePath": "/floor/14.png"
+  },
+  {
+    "x": 73,
+    "y": 372,
+    "type": "platform",
+    "imagePath": "/platforms/7.png"
+  }
+]

@@ -31,6 +31,9 @@ public class ImageLoader {
         assetGrp.put("Tiles", loadImages("tiles"));
         assetGrp.put("Environment", loadImages("environment"));
         assetGrp.put("Building", loadImages("building"));
+        assetGrp.put("Rocks", loadImages("rocks"));
+        assetGrp.put("Platforms", loadImages("platforms"));
+        assetGrp.put("Floors", loadImages("floor"));
     }
 
     // Singleton accessor

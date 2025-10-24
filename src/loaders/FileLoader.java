@@ -19,15 +19,15 @@ public class FileLoader {
 
     public Tile[] readMap(String fileName) throws IOException, URISyntaxException {
         File file = new File(fileName);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder builder = new StringBuilder();
-            String line = reader.readLine();
-            while (line != null) {
-                builder.append(line);
-                line = reader.readLine();
-            }
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        StringBuilder fileContent = new StringBuilder();
+        String line = reader.readLine();
+        while (line != null) {
+            fileContent.append(line);
+            line = reader.readLine();
+        }
 
-        Tile[] tiles = gson.fromJson(builder.toString(), Tile[].class);
+        Tile[] tiles = gson.fromJson(fileContent.toString(), Tile[].class);
         for (Tile tile : tiles) {
             URL resource = ImageLoader.class.getResource(tile.getImagePath());
             assert resource != null;

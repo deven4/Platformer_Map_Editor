@@ -103,7 +103,6 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         buttonPanel.setOpaque(false);
         scrollPane.setOpaque(false);
         scrollPane.setBorder(null);
-        System.out.println(topBarPanel.getPreferredSize().height);
         scrollPane.setPreferredSize(new Dimension(PANEL_WIDTH, App.HEIGHT - 150)); // adjust height
 
         add(scrollPane);
@@ -145,7 +144,7 @@ public class TilePanel extends JPanel implements MouseMotionListener, MouseListe
         JButton button = (JButton) e.getSource();
         Point current = SwingUtilities.convertPoint(button, e.getPoint(), designPanel);
         String imagePath = (String) button.getClientProperty("Tile");
-        selectedTile = new Tile((int) current.getX(), (int) current.getY(), imagePath, selectedAssetGrp.get(imagePath));
+        selectedTile = new Tile((int) current.getX(), (int) current.getY(), imagePath, "", selectedAssetGrp.get(imagePath));
         designPanel.setCurrSelectedAsset(selectedTile);
         DesignPanel.tileMapData.add(selectedTile);
     }

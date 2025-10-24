@@ -51,7 +51,6 @@ public class AppPanel extends JPanel {
 
     public void update() {
         designPanel.repaint();
-        System.out.println(app.getContentPane().getHeight());
     }
 
     public void saveMap() {

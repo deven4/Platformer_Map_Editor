@@ -32,7 +32,7 @@ public class App extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        long lastTime = System.nanoTime();
+        long lastTime = System.nanoTime(); // 9:00:28
         double delta = 0;
 
         while (running) {

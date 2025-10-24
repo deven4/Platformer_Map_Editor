@@ -5,21 +5,31 @@ import java.awt.image.BufferedImage;
 public class Tile {
 
     public int x, y;
+    public String type;
     public String imagePath;
     public transient int deltaX, deltaY;
-    private transient BufferedImage image;
+    private transient BufferedImage image; // transient means, this variable will not be included in the json file
+    public  int width;
+    public int height;
 
-    public Tile(int x, int y, String imagePath) {
+    /* Gson library */
+    public Tile(int x, int y, String imagePath, String type, int width, int height) {
         this.x = x;
         this.y = y;
+        this.type = type;
         this.imagePath = imagePath;
+        this.width = width;
+        this.height = height;
     }
 
-    public Tile(int x, int y, String imagePath, BufferedImage image) {
+    public Tile(int x, int y, String imagePath, String type, BufferedImage image) {
         this.x = x;
         this.y = y;
         this.image = image;
+        this.type = type;
         this.imagePath = imagePath;
+        this.width = image.getWidth();
+        this.height = image.getHeight();
     }
 
     public int getX() {
@@ -30,12 +40,36 @@ public class Tile {
         this.x = x;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     public int getY() {
         return y;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type){
+        this.type = type;
     }
 
     public String getImagePath() {
