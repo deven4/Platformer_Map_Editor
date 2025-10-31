@@ -1,6 +1,7 @@
 package core;
 
 import entities.Tile;
+import entities.TileHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,26 +17,26 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     private static final int BRING_TO_FRONT = 0;
     private static final int SEND_TO_BACK = 1;
 
-    private enum MouseAction {
-        NONE, DRAG, RESIZE, CLICKED
+    public enum MouseAction {
+        NONE, DRAG, RESIZE, CLK_TILE, CLK_OVER_SELECTION
     }
 
     private Point start, end;
     private final Rectangle selectionBox;
 
     private JPopupMenu popupMenu;
-    private final List<Tile> currSelectedAsset;
-    public static ArrayList<BufferedImage> bgImageData = new ArrayList<>();
-    public static ArrayList<Tile> tileMapData = new ArrayList<>();
     boolean resizing;
     Tile firstAsset;
     private Point lastMouse;
+
+    public static ArrayList<Tile> tileMapData = new ArrayList<>();
+    public static final List<Tile> currSelectedAsset = new ArrayList<>();
+    public static ArrayList<BufferedImage> bgImageData = new ArrayList<>();
 
     public DesignPanel(App app) {
         end = new Point();
         start = new Point(0, 0);
         selectionBox = new Rectangle();
-        currSelectedAsset = new ArrayList<>();
         Border line = BorderFactory.createLineBorder(Color.BLACK, 2, true); // Colored outer border
         Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         setBorder(BorderFactory.createCompoundBorder(line, margin));
@@ -102,7 +103,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     private void drawTileMap(Graphics g) {
         for (Tile tile : tileMapData) {
-            g.drawImage(tile.getImage(), tile.x, tile.y,tile.getWidth(),tile.getHeight(), null);
+            g.drawImage(tile.getImage(), tile.x, tile.y, tile.getWidth(), tile.getHeight(), null);
             if (!currSelectedAsset.isEmpty() && currSelectedAsset.contains(tile)) {
                 g.setColor(Color.BLACK);
                 g.drawRect(tile.x, tile.y, tile.getImage().getWidth(), tile.getImage().getHeight());
@@ -134,31 +135,29 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     @Override
     public void mousePressed(MouseEvent e) {
 
-        // Case 1: Click is over the current selection
-        if (isClickOverSelection(e)) {
-            for (Tile tile : currSelectedAsset) {
-                tile.deltaX = e.getX() - tile.x;
-                tile.deltaY = e.getY() - tile.y;
-            }
-            return;
-        }
+        MouseAction mouseAction = TileHelper.getAction(e);
 
-        // Case 2: Check if clicked on any tile (from top to bottom)
-        currSelectedAsset.clear();
-        for (int i = tileMapData.size() - 1; i >= 0; i--) {
-            Tile tile = tileMapData.get(i);
-            if (isClickInsideBBox(e, tile)) {
-                tile.deltaX = e.getX() - tile.x;
-                tile.deltaY = e.getY() - tile.y;
-                currSelectedAsset.add(tile);
-                return;
+        switch (mouseAction) {
+            case CLK_TILE -> {
+                Tile tile = TileHelper.getSelectedtile();
+                if (tile != null) {
+                    tile.deltaX = e.getX() - tile.x;
+                    tile.deltaY = e.getY() - tile.y;
+                    currSelectedAsset.add(tile);
+                } else System.err.println("NO TILE SELECTED");
+            }
+            case CLK_OVER_SELECTION -> {
+                for (Tile tile : currSelectedAsset) {
+                    tile.deltaX = e.getX() - tile.x;
+                    tile.deltaY = e.getY() - tile.y;
+                }
+            }
+            case DRAG ->  {
+                start = e.getPoint();
+                end = start;
+                currSelectedAsset.clear();
             }
         }
-
-        // Case 3: Start selection box
-        start = e.getPoint();
-        end = start;
-        currSelectedAsset.clear();
     }
 
     @Override
@@ -189,10 +188,11 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
                 tile.y = e.getY() - tile.deltaY;
             }
         } else end = e.getPoint();
+
         if (resizing) {
 
-          //  firstAsset.setWidth(width_new_box);
-          //  firstAsset.setHeight(height_new_box);
+            //  firstAsset.setWidth(width_new_box);
+            //  firstAsset.setHeight(height_new_box);
             firstAsset.setX(e.getX());
             firstAsset.setY(e.getY());
         }
@@ -208,7 +208,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
             if (ellipse2D.contains(e.getX(), e.getY())) {
                 setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
-                resizing = true;
             } else setCursorToDefault();
 
         } else setCursorToDefault();
@@ -220,26 +219,13 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     }
 
     public void setCurrSelectedAsset(Tile tile) {
-        this.currSelectedAsset.clear();
-        this.currSelectedAsset.add(tile);
+        currSelectedAsset.clear();
+        currSelectedAsset.add(tile);
     }
 
     private void showPopup(MouseEvent e) {
         if (e.isPopupTrigger() && !currSelectedAsset.isEmpty()) { // catches right-click
             popupMenu.show(e.getComponent(), e.getX(), e.getY());
         }
-    }
-
-    private boolean isClickOverSelection(MouseEvent e) {
-        for (Tile tile : currSelectedAsset) {
-            if (isClickInsideBBox(e, tile)) return true;
-        }
-        return false;
-    }
-
-    private boolean isClickInsideBBox(MouseEvent e, Tile tile) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
-        return mouseX >= tile.x && mouseX <= tile.x + tile.getImage().getWidth() && mouseY >= tile.y && mouseY <= tile.y + tile.getImage().getHeight();
     }
 }
