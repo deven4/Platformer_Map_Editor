@@ -18,7 +18,7 @@ public class App extends JFrame implements Runnable {
         getContentPane().add(appPanel);
         pack();
         setVisible(true);
-        //setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(null);
         setSize(1200, App.HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
