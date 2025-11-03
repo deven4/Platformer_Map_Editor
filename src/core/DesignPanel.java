@@ -1,6 +1,7 @@
 package core;
 
 import entities.Tile;
+import entities.TileHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,6 +16,12 @@ import java.util.List;
 
 public class DesignPanel extends JPanel implements MouseListener, MouseMotionListener {
 
+    public enum MouseAction{
+        CLK_OVER_SELECTION,
+        CLK_TILE,
+        DRAG
+    }
+
     private static final int BRING_TO_FRONT = 0;
     private static final int SEND_TO_BACK = 1;
 
@@ -24,7 +31,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     private final Rectangle selectionBox;
 
     private JPopupMenu popupMenu;
-    private final List<Tile> currSelectedAsset;
+    public static final List<Tile> currSelectedAsset = new ArrayList<>();
     public static ArrayList<BufferedImage> bgImageData = new ArrayList<>();
     public static ArrayList<Tile> tileMapData = new ArrayList<>();
 
@@ -33,7 +40,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         start = new Point(0, 0);
         boundingBox = new Rectangle();
         selectionBox = new Rectangle();
-        currSelectedAsset = new ArrayList<>();
         Border line = BorderFactory.createLineBorder(Color.BLACK,2, true); // Colored outer border
         Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         setBorder(BorderFactory.createCompoundBorder(line, margin));
@@ -123,6 +129,23 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     @Override
     public void mousePressed(MouseEvent e) {
+
+        MouseAction mouseState = TileHelper.getAction(e);
+        switch (mouseState) {
+            case DRAG -> {
+
+            }
+            case CLK_TILE -> {
+
+            }
+            case CLK_OVER_SELECTION -> {
+
+            }
+             default -> {
+
+            }
+        }
+
         // Case 1: Click is over the current selection
         if (boundingBox.contains(e.getX(), e.getY())) {
             deltaX = e.getX() - boundingBox.x;

@@ -1,14 +1,14 @@
 package entities;
 
+import core.DesignPanel;
 import core.DesignPanel.MouseAction;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 
-import static core.DesignPanel.currSelectedAsset;
 import static core.DesignPanel.tileMapData;
 
-public class TileHelper {
+public class TileHelper{
 
     private static Tile selectedTile = null;
 
@@ -19,8 +19,8 @@ public class TileHelper {
     }
 
     private static boolean isClkOverCorner(MouseEvent e) {
-        Ellipse2D ellipse2D = new Ellipse2D.Float(currSelectedAsset.getFirst().getX() - 10,
-                currSelectedAsset.getFirst().getY() - 10, 20, 20);
+        Ellipse2D ellipse2D = new Ellipse2D.Float(DesignPanel.currSelectedAsset.getFirst().getX() - 10,
+                DesignPanel.currSelectedAsset.getFirst().getY() - 10, 20, 20);
         return false;
     }
 
@@ -28,7 +28,7 @@ public class TileHelper {
      * Check if click is over the current selection (inside the bounding box)
      **/
     private static boolean isClickOverSelection(MouseEvent e) {
-        for (Tile tile : currSelectedAsset) {
+        for (Tile tile : DesignPanel.currSelectedAsset) {
             if (isClickInsideBBox(e, tile)) return true;
         }
         return false;
