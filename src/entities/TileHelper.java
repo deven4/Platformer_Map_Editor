@@ -1,33 +1,37 @@
 package entities;
 
 import core.DesignPanel;
-import core.DesignPanel.MouseAction;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 
+import static core.DesignPanel.currSelectedAsset;
 import static core.DesignPanel.tileMapData;
 
-public class TileHelper{
+public class TileHelper {
 
-    private static Tile selectedTile = null;
-
-    public static MouseAction getAction(MouseEvent e) {
-        if (isClickOverSelection(e)) return MouseAction.CLK_OVER_SELECTION;
-        else if(isClkOnTile(e)) return MouseAction.CLK_TILE;
-        else return MouseAction.DRAG;
+    public enum MouseAction {
+        SCALE_NE,
+        CLK_OVER_SELECTION,
+        CLK_TILE,
+        DRAG,
+        NONE
     }
 
-    private static boolean isClkOverCorner(MouseEvent e) {
+    private MouseAction action = MouseAction.NONE;
+    private Tile selectedTile = null;
+
+    public boolean isClkOverEdge(MouseEvent e) {
+        if(currSelectedAsset.size() != 1) return false;
         Ellipse2D ellipse2D = new Ellipse2D.Float(DesignPanel.currSelectedAsset.getFirst().getX() - 10,
                 DesignPanel.currSelectedAsset.getFirst().getY() - 10, 20, 20);
-        return false;
+        return ellipse2D.contains(e.getX(), e.getY());
     }
 
     /**
      * Check if click is over the current selection (inside the bounding box)
      **/
-    private static boolean isClickOverSelection(MouseEvent e) {
+    private boolean isClickOverSelection(MouseEvent e) {
         for (Tile tile : DesignPanel.currSelectedAsset) {
             if (isClickInsideBBox(e, tile)) return true;
         }
@@ -37,7 +41,7 @@ public class TileHelper{
     /**
      * Check if clicked on any tile (from top to bottom)
      **/
-    private static boolean isClkOnTile(MouseEvent e) {
+    private boolean isClkOnTile(MouseEvent e) {
         for (int i = tileMapData.size() - 1; i >= 0; i--) {
             Tile tile = tileMapData.get(i);
             if (isClickInsideBBox(e, tile)) {
@@ -48,15 +52,25 @@ public class TileHelper{
         return false;
     }
 
-
-    private static boolean isClickInsideBBox(MouseEvent e, Tile tile) {
+    private boolean isClickInsideBBox(MouseEvent e, Tile tile) {
         int mouseX = e.getX();
         int mouseY = e.getY();
         return mouseX >= tile.x && mouseX <= tile.x + tile.getImage().getWidth() && mouseY >= tile.y
                 && mouseY <= tile.y + tile.getImage().getHeight();
     }
 
-    public static Tile getSelectedtile() {
+    public Tile getSelectedtile() {
         return selectedTile;
+    }
+
+    public MouseAction getAction() {
+        return action;
+    }
+
+    public void setAction(MouseEvent e) {
+        if (isClkOverEdge(e)) action = MouseAction.SCALE_NE;
+        else if (isClickOverSelection(e)) action = MouseAction.CLK_OVER_SELECTION;
+        else if (isClkOnTile(e)) action = MouseAction.CLK_TILE;
+        else action = MouseAction.DRAG;
     }
 }

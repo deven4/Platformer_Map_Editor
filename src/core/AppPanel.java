@@ -25,7 +25,7 @@ public class AppPanel extends JPanel {
     public AppPanel(App app) {
         this.app = app;
         fileLoader = new FileLoader();
-        designPanel = new DesignPanel(app);
+        designPanel = new DesignPanel();
         imageLoader = ImageLoader.getInstance();
         TilePanel tilePanel = new TilePanel(designPanel);
 
