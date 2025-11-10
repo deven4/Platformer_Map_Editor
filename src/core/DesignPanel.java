@@ -166,8 +166,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     public void mouseReleased(MouseEvent e) {
         showPopup(e);
         for (Tile tile : tileMapData) {
-            if (selectionBox.intersects(new Rectangle(tile.x, tile.y, tile.getImage().getWidth(),
-                    tile.getImage().getHeight()))) {
+            if (selectionBox.intersects(new Rectangle(tile.x, tile.y, tile.getWidth(),tile.getHeight()))) {
                 currSelectedAsset.add(tile);
             }
         }
@@ -180,8 +179,8 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
             // Update bounds
             if (tile.x < minX) minX = tile.x;
             if (tile.y < minY) minY = tile.y;
-            if (tile.x + tile.getImage().getWidth() > maxX) maxX = tile.x + tile.getImage().getWidth();
-            if (tile.y + tile.getImage().getHeight() > maxY) maxY = tile.y + tile.getImage().getHeight();
+            if (tile.x + tile.getWidth() > maxX) maxX = tile.x + tile.getWidth();
+            if (tile.y + tile.getHeight() > maxY) maxY = tile.y + tile.getHeight();
         }
         boundingBox.setBounds(minX, minY, maxX - minX, maxY - minY);
 
