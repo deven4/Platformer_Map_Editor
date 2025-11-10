@@ -9,7 +9,7 @@ public class Tile {
     public String imagePath;
     public transient int deltaX, deltaY;
     private transient BufferedImage image; // transient means, this variable will not be included in the json file
-    public  int width;
+    public int width;
     public int height;
 
     /* Gson library */

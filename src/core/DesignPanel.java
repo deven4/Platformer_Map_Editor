@@ -94,7 +94,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     private void drawTileMap(Graphics g) {
         for (Tile tile : tileMapData) {
-            g.drawImage(tile.getImage(), tile.x, tile.y, null);
+            g.drawImage(tile.getImage(), tile.x, tile.y, tile.getWidth(), tile.getHeight(), null);
             if (!currSelectedAsset.isEmpty() && currSelectedAsset.contains(tile)) {
                 g.setColor(Color.BLACK);
                 g.drawRect(tile.x, tile.y, tile.getWidth(), tile.getHeight());
@@ -122,7 +122,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override

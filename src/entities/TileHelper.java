@@ -55,8 +55,8 @@ public class TileHelper {
     private boolean isClickInsideBBox(MouseEvent e, Tile tile) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        return mouseX >= tile.x && mouseX <= tile.x + tile.getImage().getWidth() && mouseY >= tile.y
-                && mouseY <= tile.y + tile.getImage().getHeight();
+        return mouseX >= tile.x && mouseX <= tile.x + tile.getWidth() && mouseY >= tile.y
+                && mouseY <= tile.y + tile.getHeight();
     }
 
     public Tile getSelectedtile() {
