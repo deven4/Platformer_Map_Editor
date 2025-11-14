@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Tile {
@@ -68,7 +69,7 @@ public class Tile {
         return type;
     }
 
-    public void setType(String type){
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -86,5 +87,9 @@ public class Tile {
 
     public void setImage(BufferedImage image) {
         this.image = image;
+    }
+
+    public Rectangle getRect() {
+        return new Rectangle(x, y, width, height);
     }
 }
