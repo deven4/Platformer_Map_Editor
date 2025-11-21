@@ -3,6 +3,7 @@ package Utils;
 import core.DesignPanel;
 import entities.Tile;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -17,6 +18,7 @@ public class MouseSelection {
         CLK_OVER_SELECTION,
         CLK_TILE,
         DRAG,
+        PAN,
         NONE
     }
 
@@ -73,6 +75,7 @@ public class MouseSelection {
         if (TileUtil.getCorner(rect, e.getPoint()) != -1) action = MouseAction.SCALE;
         else if (isClickOverSelection(e)) action = MouseAction.CLK_OVER_SELECTION;
         else if (isClkOnTile(e)) action = MouseAction.CLK_TILE;
+        else if (SwingUtilities.isMiddleMouseButton(e)) action = MouseAction.PAN;
         else action = MouseAction.DRAG;
     }
 }

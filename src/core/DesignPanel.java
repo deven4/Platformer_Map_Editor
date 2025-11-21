@@ -21,8 +21,8 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     int resizeStartX, resizeStartY;
     int initialWidth, initialHeight;
-
-    private int resizeCorner = -1; // 0=TL, 1=TR, 2=BL, 3=BR
+    int cameraX, cameraY;
+    int lastMouseX, lastMouseY;
 
     private Point start, end;
     private int deltaX, deltaY;
@@ -64,17 +64,22 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         popupMenu = new JPopupMenu();
         JMenuItem bringToFront = new JMenuItem("Bring to front");
         JMenuItem sendToBack = new JMenuItem("Send to back");
-        JMenuItem setType = new JMenuItem("Set type to platform");
+        JMenuItem setTypeP = new JMenuItem("Set type to platform");
+        JMenuItem setTypeC = new JMenuItem("Set Collision");
         JMenuItem deleteTile = new JMenuItem("Delete");
         popupMenu.add(bringToFront);
         popupMenu.add(sendToBack);
-        popupMenu.add(setType);
+        popupMenu.add(setTypeP);
+        popupMenu.add(setTypeC);
         popupMenu.add(deleteTile);
         bringToFront.addActionListener(_ -> changeOrder(BRING_TO_FRONT));
         deleteTile.addActionListener(this::deleteTile);
         sendToBack.addActionListener(_ -> changeOrder(SEND_TO_BACK));
-        setType.addActionListener(_ -> {
+        setTypeP.addActionListener(_ -> {
             for (Tile tile : currSelectedAsset) tile.setType("platform");
+        });
+        setTypeC.addActionListener(_ -> {
+            for (Tile tile : currSelectedAsset) tile.setType("Collision");
         });
     }
 
@@ -102,10 +107,11 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     private void drawTileMap(Graphics g) {
         for (Tile tile : tileMapData) {
-            g.drawImage(tile.getImage(), tile.x, tile.y, tile.getWidth(), tile.getHeight(), null);
+            g.drawImage(tile.getImage(), tile.x - cameraX, tile.y - cameraY, tile.getWidth(), tile.getHeight(),
+                    null);
             if (!currSelectedAsset.isEmpty() && currSelectedAsset.contains(tile)) {
                 g.setColor(Color.BLACK);
-                g.drawRect(tile.x, tile.y, tile.getWidth(), tile.getHeight());
+                g.drawRect(tile.x - cameraX, tile.y - cameraY, tile.getWidth(), tile.getHeight());
 //                Point botRight = new Point(tile.x + tile.getImage().getWidth(), tile.y + tile.getImage().getHeight());
 //                g.drawOval(botRight.x, botRight.y, 5, 5);
 //                g.drawLine(0, botRight.y, botRight.x, botRight.y);
@@ -169,6 +175,10 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
                 initialWidth = currSelectedAsset.getFirst().getWidth();
                 initialHeight = currSelectedAsset.getFirst().getHeight();
             }
+            case PAN -> {
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+            }
             default -> {
 
             }
@@ -219,6 +229,16 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
                 currSelectedAsset.getFirst().setWidth(initialWidth + deltaX);
                 currSelectedAsset.getFirst().setHeight(initialHeight + deltaY);
             }
+            case PAN -> {
+                /* Calculate how much the user dragged */
+                deltaX = e.getX() - lastMouseX;
+                deltaY = e.getY() - lastMouseY;
+                cameraX -= deltaX;
+                cameraY -= deltaY;
+
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+            }
             default -> {
                 for (Tile tile : currSelectedAsset) {
                     tile.x = e.getX() - tile.deltaX;
@@ -238,7 +258,6 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
         else rect = selectionBox;
 
         int corner = TileUtil.getCorner(rect, e.getPoint()); // check hovered over a tile corner
-        System.out.println(corner);
         switch (corner) {
             case 0 -> setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
             case 1 -> setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
