@@ -141,11 +141,10 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
     @Override
     public void mousePressed(MouseEvent e) {
 
-        if (currSelectedAsset.size() > 1) mouseHelper.setAction(boundingBox, e);
-        else {
-            if (!currSelectedAsset.isEmpty())
-                mouseHelper.setAction(currSelectedAsset.getFirst().getRect(), e);
-        }
+        Point e1 = new Point(e.getX() - cameraX, e.getY() - cameraY);
+        if (currSelectedAsset.size() > 1) mouseHelper.setAction(boundingBox, e1, e);
+        else if (currSelectedAsset.size() == 1) mouseHelper.setAction(currSelectedAsset.getFirst().getRect(), e1, e);
+        else mouseHelper.setAction(null,e1 , e);
 
         switch (mouseHelper.getAction()) {
             case DRAG -> {

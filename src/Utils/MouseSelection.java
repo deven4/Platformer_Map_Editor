@@ -35,7 +35,7 @@ public class MouseSelection {
     /**
      * Check if click is over the current selection (inside the bounding box)
      **/
-    private boolean isClickOverSelection(MouseEvent e) {
+    private boolean isClickOverSelection(Point e) {
         for (Tile tile : DesignPanel.currSelectedAsset) {
             if (isClickInsideBBox(e, tile)) return true;
         }
@@ -45,7 +45,7 @@ public class MouseSelection {
     /**
      * Check if clicked on any tile (from top to bottom)
      **/
-    private boolean isClkOnTile(MouseEvent e) {
+    private boolean isClkOnTile(Point e) {
         for (int i = tileMapData.size() - 1; i >= 0; i--) {
             Tile tile = tileMapData.get(i);
             if (isClickInsideBBox(e, tile)) {
@@ -56,11 +56,9 @@ public class MouseSelection {
         return false;
     }
 
-    private boolean isClickInsideBBox(MouseEvent e, Tile tile) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
-        return mouseX >= tile.x && mouseX <= tile.x + tile.getWidth() && mouseY >= tile.y
-                && mouseY <= tile.y + tile.getHeight();
+    private boolean isClickInsideBBox(Point mouse, Tile tile) {
+        return mouse.x >= tile.x && mouse.y <= tile.x + tile.getWidth() && mouse.y >= tile.y
+                && mouse.y <= tile.y + tile.getHeight();
     }
 
     public Tile getSelectedtile() {
@@ -71,10 +69,12 @@ public class MouseSelection {
         return action;
     }
 
-    public void setAction(Rectangle rect, MouseEvent e) {
-        if (TileUtil.getCorner(rect, e.getPoint()) != -1) action = MouseAction.SCALE;
-        else if (isClickOverSelection(e)) action = MouseAction.CLK_OVER_SELECTION;
-        else if (isClkOnTile(e)) action = MouseAction.CLK_TILE;
+    public void setAction(Rectangle rect,Point e1, MouseEvent e) {
+        if(rect != null)System.out.print(rect.getX() + "," + rect.getY());
+        System.out.println("; " + e1);
+        if (rect != null && TileUtil.getCorner(rect, e1) != -1) action = MouseAction.SCALE;
+        else if (isClickOverSelection(e1)) action = MouseAction.CLK_OVER_SELECTION;
+        else if (isClkOnTile(e1)) action = MouseAction.CLK_TILE;
         else if (SwingUtilities.isMiddleMouseButton(e)) action = MouseAction.PAN;
         else action = MouseAction.DRAG;
     }
