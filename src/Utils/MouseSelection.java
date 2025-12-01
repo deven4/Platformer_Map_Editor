@@ -57,8 +57,9 @@ public class MouseSelection {
     }
 
     private boolean isClickInsideBBox(Point mouse, Tile tile) {
-        return mouse.x >= tile.x && mouse.y <= tile.x + tile.getWidth() && mouse.y >= tile.y
-                && mouse.y <= tile.y + tile.getHeight();
+        return mouse.x >= (tile.x - DesignPanel.cameraX) && mouse.y <= (tile.x - DesignPanel.cameraX) + tile.getWidth()
+                && mouse.y >= (tile.y - DesignPanel.cameraY) && mouse.y <= (tile.y - DesignPanel.cameraY)
+                + tile.getHeight();
     }
 
     public Tile getSelectedtile() {

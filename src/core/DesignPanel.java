@@ -21,7 +21,7 @@ public class DesignPanel extends JPanel implements MouseListener, MouseMotionLis
 
     int resizeStartX, resizeStartY;
     int initialWidth, initialHeight;
-    int cameraX, cameraY;
+    public static int cameraX, cameraY;
     int lastMouseX, lastMouseY;
 
     private Point start, end;
